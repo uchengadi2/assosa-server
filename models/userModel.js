@@ -56,16 +56,24 @@ const userSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      default: "nextchamp",
-      enum: ["staff", "nextchamp", "champion"],
+      default: "old-student",
+      enum: ["old-student", "student", "others"],
     },
-    // vendor: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "Vendor",
-    // },
 
     phoneNumber: {
       type: String,
+    },
+    isAMember: {
+      type: Boolean,
+      default: false,
+      enum: [false, true],
+    },
+    membershipNo: {
+      type: String,
+    },
+    membership: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Membership",
     },
   },
   {

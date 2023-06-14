@@ -41,6 +41,11 @@ const transactionRoute = require("./routes/transactionRoute");
 const courseRoute = require("./routes/courseRoute");
 const channelRoute = require("./routes/channelRoute");
 const programmeRoute = require("./routes/programmeRoute");
+const membershipRoute = require("./routes/membershipRoute");
+const connectionRoute = require("./routes/connectionRoute");
+const eventRoute = require("./routes/eventRoute");
+const noticeBoardRoute = require("./routes/noticeBoardRoute");
+const projectRoute = require("./routes/projectRoute");
 
 const app = express();
 
@@ -139,8 +144,11 @@ app.use("/api/v1/transactions", transactionRoute);
 app.use("/api/v1/courses", courseRoute);
 app.use("/api/v1/channels", channelRoute);
 app.use("/api/v1/programmes", programmeRoute);
-
-channelRoute;
+app.use("/api/v1/memberships", membershipRoute);
+app.use("/api/v1/connections", connectionRoute);
+app.use("/api/v1/events", eventRoute);
+app.use("/api/v1/noticeboards", noticeBoardRoute);
+app.use("/api/v1/projects", projectRoute);
 
 //tackling unhandled routes
 app.all("*", (req, res, next) => {
