@@ -50,6 +50,9 @@ const noticeBoardSchema = new mongoose.Schema(
     targetAudience: {
       type: String,
     },
+    slug: {
+      type: String,
+    },
 
     createdBy: {
       type: mongoose.Schema.ObjectId,

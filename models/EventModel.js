@@ -62,6 +62,9 @@ const eventSchema = new mongoose.Schema(
     extraImages: {
       type: String,
     },
+    slug: {
+      type: String,
+    },
 
     dateCreated: {
       type: Date,

@@ -57,6 +57,9 @@ const projectSchema = new mongoose.Schema(
       default: "yet-to-start",
       enum: ["yet-to-start", "on-going", "completed", "cancel", "suspended"],
     },
+    slug: {
+      type: String,
+    },
 
     createdBy: {
       type: mongoose.Schema.ObjectId,

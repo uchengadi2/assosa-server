@@ -98,6 +98,9 @@ const membershipSchema = new mongoose.Schema(
       default: "inactive",
       enum: ["inactive", "active"],
     },
+    slug: {
+      type: String,
+    },
   },
   {
     toJSON: { virtuals: true },
