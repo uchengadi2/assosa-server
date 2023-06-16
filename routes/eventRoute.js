@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.route("/").get(eventController.getAllEvents).post(
   //authController.restrictTo("admin", "set-admin"),
-  eventController.uploadEventThumbnailImage,
-  eventController.resizeEventThumbnailImage,
+  eventController.uploadEventImages,
+  eventController.resizeEventImages,
 
   eventController.createEvent
 );
@@ -22,8 +22,8 @@ router
   .get(eventController.getEvent)
   .patch(
     //authController.restrictTo("admin", "set-admin"),
-    eventController.uploadEventThumbnailImage,
-    eventController.resizeEventThumbnailImage,
+    eventController.uploadEventImages,
+    eventController.resizeEventImages,
 
     eventController.updateEvent
   )

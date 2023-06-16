@@ -65,6 +65,7 @@ const eventSchema = new mongoose.Schema(
     slug: {
       type: String,
     },
+    images: [String],
 
     dateCreated: {
       type: Date,

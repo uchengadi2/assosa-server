@@ -28,24 +28,44 @@ const upload = multer({
 });
 
 //when uploading a single file
-exports.uploadEventThumbnailImage = upload.single("thumbnail");
+//exports.uploadEventThumbnailImage = upload.single("thumbnail");
 
-exports.resizeEventThumbnailImage = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
+//for multiple images in a field that is an array, use the following
+//exports.uploadImages = upload.array('images',3)
 
-  //1. start by processing the cover image
-  // req.body.image = `${req.body.name.split(" ")[0]}-${
-  //   req.body.createdBy
-  // }-${Date.now()}-cover.jpeg`;
-  req.body.thumbnail = `${req.body.createdBy}-${Date.now()}-${
-    req.file.originalname
-  }`;
+//for more than one file(multiple files)
+exports.uploadEventImages = upload.fields([
+  { name: "thumbnail", maxCount: 1 },
+  { name: this.uploadImages, maxCount: 3 },
+]);
 
-  await sharp(req.file.buffer)
+exports.resizeEventImages = catchAsync(async (req, res, next) => {
+  if (!req.files.thumbnail || !req.files.images) return next();
+
+  //processing the thumbnail
+
+  req.body.thumbnail = `event-${req.params.id}-${Date.now()}-thummbail.jpeg`;
+
+  await sharp(req.files.thumbnail[0].buffer)
     .resize(2000, 1333)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(`public/images/events/${req.body.thumbnail}`);
+
+  //processing other images
+  req.body.images = [];
+  await Promise.all(
+    req.files.images.map(async (file, index) => {
+      const filename = `event-${req.params.id}-${Date.now()}-${index + 1}.jpeg`;
+
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/images/events/${filename}`);
+      req.body.images.push(filename);
+    })
+  );
 
   next();
 });
