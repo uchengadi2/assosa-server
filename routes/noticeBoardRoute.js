@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.route("/").get(noticeBoardController.getAllNoticeBoards).post(
   //authController.restrictTo("admin", "old-student", "set-admin"),
-  noticeBoardController.uploadNoticeThumbnailImage,
-  noticeBoardController.resizeNoticeThumbnailImage,
+  noticeBoardController.uploadNoticeboardImages,
+  noticeBoardController.resizeNoticeboardImages,
 
   noticeBoardController.createNoticeBoard
 );
@@ -21,10 +21,10 @@ router
   .route("/:id")
   .get(noticeBoardController.getNoticeBoard)
   .patch(
-    authController.restrictTo("admin", "old-student", "set-admin"),
+    //authController.restrictTo("admin", "old-student", "set-admin"),
 
-    noticeBoardController.uploadNoticeThumbnailImage,
-    noticeBoardController.resizeNoticeThumbnailImage
+    noticeBoardController.uploadNoticeboardImages,
+    noticeBoardController.resizeNoticeboardImages
   )
   .delete(
     authController.restrictTo("admin", "set-admin"),

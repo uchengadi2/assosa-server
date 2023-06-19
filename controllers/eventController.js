@@ -36,15 +36,18 @@ const upload = multer({
 //for more than one file(multiple files)
 exports.uploadEventImages = upload.fields([
   { name: "thumbnail", maxCount: 1 },
-  { name: this.uploadImages, maxCount: 3 },
+  { name: "images", maxCount: 20 },
 ]);
 
 exports.resizeEventImages = catchAsync(async (req, res, next) => {
   if (!req.files.thumbnail || !req.files.images) return next();
+  //if (!req.files.thumbnail) return next();
 
   //processing the thumbnail
 
-  req.body.thumbnail = `event-${req.params.id}-${Date.now()}-thummbail.jpeg`;
+  req.body.thumbnail = `events-${req.body.createdBy}-${
+    req.files.thumbnail[0].originalname
+  }-${Date.now()}-thumbnail.jpeg`;
 
   await sharp(req.files.thumbnail[0].buffer)
     .resize(2000, 1333)
@@ -56,7 +59,9 @@ exports.resizeEventImages = catchAsync(async (req, res, next) => {
   req.body.images = [];
   await Promise.all(
     req.files.images.map(async (file, index) => {
-      const filename = `event-${req.params.id}-${Date.now()}-${index + 1}.jpeg`;
+      const filename = `event-${req.body.createdBy}-${
+        file.originalname
+      }-${Date.now()}-${index + 1}.jpeg`;
 
       await sharp(file.buffer)
         .resize(2000, 1333)

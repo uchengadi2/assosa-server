@@ -45,6 +45,7 @@ const projectSchema = new mongoose.Schema(
     video: {
       type: String,
     },
+    images: [String],
     imageLink: {
       type: String,
     },
