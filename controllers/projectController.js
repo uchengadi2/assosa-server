@@ -40,37 +40,43 @@ exports.uploadProjectImages = upload.fields([
 ]);
 
 exports.resizeProjectImages = catchAsync(async (req, res, next) => {
-  if (!req.files.thumbnail || !req.files.images) return next();
+  //if (!req.files.thumbnail || !req.files.images) return next();
   //if (!req.files.thumbnail) return next();
 
   //processing the thumbnail
 
-  req.body.thumbnail = `projects-${req.body.createdBy}-${
-    req.files.thumbnail[0].originalname
-  }-${Date.now()}-thumbnail.jpeg`;
+  console.log("req.files:", req.files);
 
-  await sharp(req.files.thumbnail[0].buffer)
-    .resize(2000, 1333)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`public/images/projects/${req.body.thumbnail}`);
+  if (req.files.thumbnail) {
+    req.body.thumbnail = `project-${
+      req.body.createdBy
+    }-${Date.now()}-thumbnail.jpeg`;
 
-  //processing other images
-  req.body.images = [];
-  await Promise.all(
-    req.files.images.map(async (file, index) => {
-      const filename = `project-${req.body.createdBy}-${
-        file.originalname
-      }-${Date.now()}-${index + 1}.jpeg`;
+    await sharp(req.files.thumbnail[0].buffer)
+      .resize(2000, 1333)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`public/images/projects/${req.body.thumbnail}`);
+  }
 
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`public/images/projects/${filename}`);
-      req.body.images.push(filename);
-    })
-  );
+  if (req.files.images) {
+    //processing other images
+    req.body.images = [];
+    await Promise.all(
+      req.files.images.map(async (file, index) => {
+        const filename = `project-${req.body.createdBy}-${Date.now()}-${
+          index + 1
+        }.jpeg`;
+
+        await sharp(file.buffer)
+          .resize(2000, 1333)
+          .toFormat("jpeg")
+          .jpeg({ quality: 90 })
+          .toFile(`public/images/projects/${filename}`);
+        req.body.images.push(filename);
+      })
+    );
+  }
 
   next();
 });

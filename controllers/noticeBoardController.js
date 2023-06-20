@@ -40,37 +40,41 @@ exports.uploadNoticeboardImages = upload.fields([
 ]);
 
 exports.resizeNoticeboardImages = catchAsync(async (req, res, next) => {
-  if (!req.files.thumbnail || !req.files.images) return next();
+  //if (!req.files.thumbnail || !req.files.images) return next();
   //if (!req.files.thumbnail) return next();
 
   //processing the thumbnail
 
-  req.body.thumbnail = `notices-${req.body.createdBy}-${
-    req.files.thumbnail[0].originalname
-  }-${Date.now()}-thumbnail.jpeg`;
+  if (req.files.thumbnail) {
+    req.body.thumbnail = `notices-${
+      req.body.createdBy
+    }-${Date.now()}-thumbnail.jpeg`;
 
-  await sharp(req.files.thumbnail[0].buffer)
-    .resize(2000, 1333)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`public/images/noticeboards/${req.body.thumbnail}`);
+    await sharp(req.files.thumbnail[0].buffer)
+      .resize(2000, 1333)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`public/images/noticeboards/${req.body.thumbnail}`);
+  }
 
-  //processing other images
-  req.body.images = [];
-  await Promise.all(
-    req.files.images.map(async (file, index) => {
-      const filename = `notices-${req.body.createdBy}-${
-        file.originalname
-      }-${Date.now()}-${index + 1}.jpeg`;
+  if (req.files.images) {
+    //processing other images
+    req.body.images = [];
+    await Promise.all(
+      req.files.images.map(async (file, index) => {
+        const filename = `notices-${req.body.createdBy}-${Date.now()}-${
+          index + 1
+        }.jpeg`;
 
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`public/images/noticeboards/${filename}`);
-      req.body.images.push(filename);
-    })
-  );
+        await sharp(file.buffer)
+          .resize(2000, 1333)
+          .toFormat("jpeg")
+          .jpeg({ quality: 90 })
+          .toFile(`public/images/noticeboards/${filename}`);
+        req.body.images.push(filename);
+      })
+    );
+  }
 
   next();
 });

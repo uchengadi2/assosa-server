@@ -40,37 +40,40 @@ exports.uploadEventImages = upload.fields([
 ]);
 
 exports.resizeEventImages = catchAsync(async (req, res, next) => {
-  if (!req.files.thumbnail || !req.files.images) return next();
+  //if (!req.files.thumbnail || !req.files.images) return next();
   //if (!req.files.thumbnail) return next();
 
   //processing the thumbnail
+  if (req.files.thumbnail) {
+    req.body.thumbnail = `events-${
+      req.body.createdBy
+    }-${Date.now()}-thumbnail.jpeg`;
 
-  req.body.thumbnail = `events-${req.body.createdBy}-${
-    req.files.thumbnail[0].originalname
-  }-${Date.now()}-thumbnail.jpeg`;
+    await sharp(req.files.thumbnail[0].buffer)
+      .resize(2000, 1333)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`public/images/events/${req.body.thumbnail}`);
+  }
 
-  await sharp(req.files.thumbnail[0].buffer)
-    .resize(2000, 1333)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`public/images/events/${req.body.thumbnail}`);
+  if (req.files.images) {
+    //processing other images
+    req.body.images = [];
+    await Promise.all(
+      req.files.images.map(async (file, index) => {
+        const filename = `event-${req.body.createdBy}-${Date.now()}-${
+          index + 1
+        }.jpeg`;
 
-  //processing other images
-  req.body.images = [];
-  await Promise.all(
-    req.files.images.map(async (file, index) => {
-      const filename = `event-${req.body.createdBy}-${
-        file.originalname
-      }-${Date.now()}-${index + 1}.jpeg`;
-
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`public/images/events/${filename}`);
-      req.body.images.push(filename);
-    })
-  );
+        await sharp(file.buffer)
+          .resize(2000, 1333)
+          .toFormat("jpeg")
+          .jpeg({ quality: 90 })
+          .toFile(`public/images/events/${filename}`);
+        req.body.images.push(filename);
+      })
+    );
+  }
 
   next();
 });

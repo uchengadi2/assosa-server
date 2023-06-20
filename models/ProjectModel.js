@@ -4,7 +4,7 @@ const projectSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "Please provide the name of the cluster"],
+      required: [false, "Please provide the name of the cluster"],
     },
     headline: {
       type: String,
@@ -24,6 +24,7 @@ const projectSchema = new mongoose.Schema(
     },
     defaultThumbnail: {
       type: String,
+      default: "project.png",
     },
     estimatedCost: {
       type: Number,
@@ -39,6 +40,7 @@ const projectSchema = new mongoose.Schema(
       default: false,
       enum: [false, true],
     },
+
     contactPersonDetails: {
       type: String,
     },

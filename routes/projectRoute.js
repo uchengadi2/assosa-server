@@ -12,7 +12,6 @@ const router = express.Router();
 router.route("/").get(projectController.getAllProjects).post(
   //authController.restrictTo("admin", "set-admin"),
   projectController.uploadProjectImages,
-
   projectController.resizeProjectImages,
   projectController.createProject
 );
@@ -21,7 +20,7 @@ router
   .route("/:id")
   .get(projectController.getProject)
   .patch(
-    authController.restrictTo("admin", "set-admin"),
+    //authController.restrictTo("admin", "set-admin"),
     projectController.uploadProjectImages,
     projectController.resizeProjectImages,
 
