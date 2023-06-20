@@ -46,11 +46,12 @@ router
   );
 
 //router.use(authController.restrictTo("admin", "user"));
-router.use(authController.protect);
+//router.use(authController.protect);
 router
   .route("/:id")
   .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+
+  .patch(authController.protect, userController.updateUser)
+  .delete(authController.protect, userController.deleteUser);
 
 module.exports = router;

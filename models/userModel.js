@@ -19,16 +19,8 @@ const userSchema = new mongoose.Schema(
     photo: { type: String, default: "default.jpg" },
     role: {
       type: String,
-      default: "user",
-      enum: [
-        "user",
-        "nextchamp",
-        "admin",
-        "staff",
-        "instructor",
-        "assessor",
-        "mentor",
-      ],
+      default: "old-student",
+      enum: ["old-student", "student", "admin", "set-admin", "others"],
     },
     password: {
       type: String,
@@ -67,6 +59,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
       enum: [false, true],
+    },
+    membershipStatus: {
+      type: String,
+      default: "pending",
+      enum: ["pending", "in-process", "member", "not-member"],
     },
     membershipNo: {
       type: String,
